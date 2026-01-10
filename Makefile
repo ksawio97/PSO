@@ -15,7 +15,7 @@ build: $(TARGET)
 # create executable
 $(TARGET): $(OBJ_FILES)
 	@mkdir -p $(dir $@)
-	cc $(OBJ_FILES) -o $@
+	cc $(OBJ_FILES) -o $@ -lm
 
 # build .o files
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
