@@ -9,8 +9,8 @@ double random_num(double min, double max) {
 }
 
 
-void read_nums(const int nums_count, double nums[nums_count], char *line) {
-    if (nums_count == 0) {
+void read_nums(const int num_count, double nums[num_count], char *line) {
+    if (num_count == 0) {
         return;
     }
 
@@ -30,7 +30,7 @@ void read_nums(const int nums_count, double nums[nums_count], char *line) {
         negative = true;
     }
 
-    for (; n < nums_count && *c != '\0' && *c != EOF; c++) {
+    for (; n < num_count && *c != '\0' && *c != EOF; c++) {
         // new num
         if (*c == ' ') {
             *number *= pow(-1.0, negative);
