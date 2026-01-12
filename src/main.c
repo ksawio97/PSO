@@ -2,37 +2,68 @@
 #include <time.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 
 #include "../include/map.h"
 #include "../include/pso.h"
+#include "../include/logger.h"
 
 int main(int argc, char** argv) {
     srand(time(NULL));
     
-    // TODO handle reading args from argv
-    char* map_file = "res/test_map.txt";
+    if(argc < 2){
+        printf("Nie uzyto pliku mapy\n");
+        return 1;
+    }
+
+    int save_interval = 0;
+
+    char* map_file = argv[1];
     int particle_count = 30, iter_count = 100;
-    Config config;
-    config.w = 0.5;
-    config.c1 = 1;
-    config.c2 = 1;
-    
+    Config config = read_config();
+
+    for(int i = 2; i < argc; i++){
+        if(strcmp(argv[i], "-p") == 0 && i + 1 < argc){
+            particle_count = atoi(argv[i + 1]);
+            i++;
+        }
+        else if(strcmp(argv[i], "-i") == 0 && i + 1 < argc){
+            iter_count = atoi(argv[i + 1]);
+            i++;
+        }
+        else if(strcmp(argv[i], "-c") == 0 && i + 1 < argc){
+            FILE* config_file = fopen(argv[i + 1], "r");
+            if(config_file != NULL){
+                fscanf(config_file, "%lf %lf %lf", &config.w, &config.c1, &config.c2);
+                fclose(config_file);
+            }
+            i++;
+        }
+        else if(strcmp(argv[i], "-n") == 0 && i + 1 < argc){
+            save_interval = atoi(argv[i + 1]);
+            i++;
+        }
+    }
+        
+
+    init_logger("res/log.csv");
     read_map(map_file);
     init_swarm(particle_count, config, get_map_size());
     
-    for (int i = 0; i < iter_count; i++) {
-        iter_swarm();
+    if(save_interval > 0){
+        log_save(0, get_swarm_particles(), particle_count);  
     }
-    
-    // get positions
-    Position partilces[particle_count];
-    get_particles_positions(partilces);
-
-    for (int i = 0; i < particle_count; i++) {
-        printf("Particle %d pos: %.2f %.2f\n", i + 1, partilces[i].x, partilces[i].y);
+    for(int i = 0; i < iter_count; i++){
+        iter_swarm();
+        int current_step = i + 1;
+        if(save_interval > 0 && current_step % save_interval == 0){
+            log_save(current_step, get_swarm_particles(), particle_count);  
+        }
     }
     
     clear_swarm();
     clear_map();
+    close_logger();
+    
     return 0;
 }

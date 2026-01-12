@@ -36,13 +36,6 @@ void init_swarm(const int particle_count, const Config config, const Size map_si
     swarm->config.c2 = config.c2;
 }
 
-// !!expects that Position* has allocated enough memory for particles Positions 
-void get_particles_positions(Position *particles_positions) {
-    for (int i = 0; i < swarm->particle_count; i++) {
-        particles_positions[i].x = swarm->particles[i].pos.x;
-        particles_positions[i].y = swarm->particles[i].pos.y;
-    }
-}
 
 void iter_particle(Particle *particle) {
     // get current velocity
@@ -79,8 +72,14 @@ void iter_swarm() {
         }
     }
 }
+
 void clear_swarm() {
     free(swarm->particles);
     free(swarm);
     swarm = NULL;
+}
+
+Particle* get_swarm_particles() {
+    if (swarm == NULL) return NULL;
+    return swarm->particles;
 }

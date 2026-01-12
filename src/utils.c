@@ -3,6 +3,8 @@
 #include <math.h>
 #include <stdbool.h>
 
+#include "../include/utils.h"
+
 // rand num in range [min, max]
 double random_num(double min, double max) {
     return ((double)rand() / (double)RAND_MAX) * (max - min) + min; 
@@ -59,4 +61,12 @@ void read_nums(const int num_count, double nums[num_count], char *line) {
         }
     }
     *number *= pow(-1.0, negative);
+}
+
+Config read_config() {
+    Config config;
+    config.w = 0.5;
+    config.c1 = 1;
+    config.c2 = 1;
+    return config;
 }
