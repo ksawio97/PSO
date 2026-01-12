@@ -63,10 +63,13 @@ void read_nums(const int num_count, double nums[num_count], char *line) {
     *number *= pow(-1.0, negative);
 }
 
-Config read_config() {
-    Config config;
-    config.w = 0.5;
-    config.c1 = 1;
-    config.c2 = 1;
-    return config;
+void read_config(char* filename, Config* config) {
+    if (filename == NULL) {
+        return;
+    }
+    FILE* config_file = fopen(filename, "r");
+    if (config_file != NULL) {
+    fscanf(config_file, "%lf %lf %lf", &config->w, &config->c1, &config->c2);
+    fclose(config_file);
+    }
 }

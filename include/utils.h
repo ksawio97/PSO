@@ -14,7 +14,7 @@ typedef struct Config {
     double c1, c2;
 } Config;
 
-Config read_config();
+void read_config(char* filename, Config* config);
 
 double random_num(double min, double max);
 

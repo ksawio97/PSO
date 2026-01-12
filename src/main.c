@@ -20,7 +20,7 @@ int main(int argc, char** argv) {
 
     char* map_file = argv[1];
     int particle_count = 30, iter_count = 100;
-    Config config = read_config();
+    Config config = {0.5, 1.0, 1.0};
 
     for(int i = 2; i < argc; i++){
         if(strcmp(argv[i], "-p") == 0 && i + 1 < argc){
@@ -32,11 +32,7 @@ int main(int argc, char** argv) {
             i++;
         }
         else if(strcmp(argv[i], "-c") == 0 && i + 1 < argc){
-            FILE* config_file = fopen(argv[i + 1], "r");
-            if(config_file != NULL){
-                fscanf(config_file, "%lf %lf %lf", &config.w, &config.c1, &config.c2);
-                fclose(config_file);
-            }
+            read_config(argv[i + 1], &config);
             i++;
         }
         else if(strcmp(argv[i], "-n") == 0 && i + 1 < argc){
@@ -45,7 +41,6 @@ int main(int argc, char** argv) {
         }
     }
         
-
     init_logger("res/log.csv");
     read_map(map_file);
     init_swarm(particle_count, config, get_map_size());
@@ -53,8 +48,10 @@ int main(int argc, char** argv) {
     if(save_interval > 0){
         log_save(0, get_swarm_particles(), particle_count);  
     }
+
     for(int i = 0; i < iter_count; i++){
         iter_swarm();
+        
         int current_step = i + 1;
         if(save_interval > 0 && current_step % save_interval == 0){
             log_save(current_step, get_swarm_particles(), particle_count);  
