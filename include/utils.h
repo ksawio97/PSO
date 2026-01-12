@@ -9,6 +9,13 @@ typedef struct Position {
     double x, y;
 } Position;
 
+typedef struct Config {
+    double w;
+    double c1, c2;
+} Config;
+
+Config read_config();
+
 double random_num(double min, double max);
 
 void read_nums(const int num_count, double nums[num_count], char *line);
