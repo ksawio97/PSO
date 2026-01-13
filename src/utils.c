@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <stdbool.h>
 
 #include "../include/utils.h"
 
@@ -63,13 +62,16 @@ void read_nums(const int num_count, double nums[num_count], char *line) {
     *number *= pow(-1.0, negative);
 }
 
-void read_config(char* filename, Config* config) {
+bool read_config(char* filename, Config* config) {
     if (filename == NULL) {
-        return;
+        return false;
     }
     FILE* config_file = fopen(filename, "r");
     if (config_file != NULL) {
-    fscanf(config_file, "%lf %lf %lf", &config->w, &config->c1, &config->c2);
-    fclose(config_file);
+        fscanf(config_file, "%lf %lf %lf", &config->w, &config->c1, &config->c2);
+        fclose(config_file);
+        return true;
     }
+
+    return false;
 }

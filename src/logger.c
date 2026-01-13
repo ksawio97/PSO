@@ -14,6 +14,9 @@ void log_save(int iteration, const Particle *Particles, int num_particles){
     }
 }
 
-void close_logger(){
+void close_logger() {
+    if (log_file == NULL) {
+        return;
+    }
     fclose(log_file);
 }

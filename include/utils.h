@@ -1,6 +1,8 @@
 #ifndef _UTILS_H
 #define _UTILS_H
 
+#include <stdbool.h>
+
 typedef struct Size {
     int w, h;
 } Size;
@@ -14,7 +16,8 @@ typedef struct Config {
     double c1, c2;
 } Config;
 
-void read_config(char* filename, Config* config);
+// returns false if file couldn't be read 
+bool read_config(char* filename, Config* config);
 
 double random_num(double min, double max);
 
