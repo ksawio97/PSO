@@ -16,11 +16,10 @@ typedef struct Config {
     double c1, c2;
 } Config;
 
-// returns false if file couldn't be read 
-bool read_config(char* filename, Config* config);
-
 double random_num(double min, double max);
 
 void read_nums(const int num_count, double nums[num_count], char *line);
+
+void read_params(char **argv, int argc, Config *config, int *save_interval, int *particle_count, int *iter_count);
 
 #endif

@@ -15,8 +15,8 @@ void read_map(const char *filename) {
     
     FILE *fh = fopen(filename, "r"); 
     if (fh == NULL) {
-        // TODO add error assertion
-        return;
+        fprintf(stderr, "Error: read map file error");
+        exit(0);
     }
     map = malloc(sizeof(Map));
     // read width and height

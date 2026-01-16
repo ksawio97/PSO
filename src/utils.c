@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <math.h>
 
@@ -8,7 +9,6 @@
 double random_num(double min, double max) {
     return ((double)rand() / (double)RAND_MAX) * (max - min) + min; 
 }
-
 
 void read_nums(const int num_count, double nums[num_count], char *line) {
     if (num_count == 0) {
@@ -62,16 +62,64 @@ void read_nums(const int num_count, double nums[num_count], char *line) {
     *number *= pow(-1.0, negative);
 }
 
-bool read_config(char* filename, Config* config) {
-    if (filename == NULL) {
-        return false;
-    }
+void read_config(char* filename, Config* config) {
     FILE* config_file = fopen(filename, "r");
     if (config_file != NULL) {
         fscanf(config_file, "%lf %lf %lf", &config->w, &config->c1, &config->c2);
         fclose(config_file);
-        return true;
     }
+    fprintf(stderr, "Error: reading config file");
+}
 
-    return false;
+void read_params(char **argv, int argc, Config *config, int *save_interval, int *particle_count, int *iter_count) {
+
+    char* filename = NULL;
+    for(int i = 1; i < argc; i++) {
+
+        if (argv[i][0] != '-' && filename == NULL) {
+            filename = malloc(strlen(argv[i]));
+            filename = argv[i];    
+        }
+        
+        if (strlen(argv[i]) == 1 || i + 1 == argc) {
+            continue;    
+        }
+
+        switch (argv[i][1]) {
+            case 'p':
+                *particle_count = atoi(argv[i + 1]);
+
+                if (particle_count <= 0) {
+                    fprintf(stderr, "Error: There must be atleast 1 particle\n");
+                    exit(0);
+                }
+                break;
+            case 'i':
+                *iter_count = atoi(argv[i  + 1]);
+
+                if (iter_count <= 0) {
+                    fprintf(stderr, "Error: There must be atleast 1 iteration\n");
+                    exit(0); 
+                    return;
+                }
+                break;
+            case 'c':
+                read_config(argv[i + 1], config);
+                
+                break;
+            case 'n':
+                *save_interval = atoi(argv[i + 1]);
+                if (save_interval <= 0) {
+                    fprintf(stderr, "Error: You can't save to log every <0 steps\n");
+                    exit(0);
+                }
+                break;
+            i++;
+        };
+
+        if (filename != NULL) {
+            fprintf(stderr, "Error: You need to provide filename map\n");
+            exit(0);
+        }
+    }
 }
